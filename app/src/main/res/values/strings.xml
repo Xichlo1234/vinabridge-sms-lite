@@ -37,7 +37,7 @@
     <string name="btn_save_config">Lưu cấu hình</string>
 
     <!-- Pairing & Security -->
-    <string name="security_pairing_title">Bảo mật & Ghép cặp</string>
+    <string name="security_pairing_title">Bảo mật và Ghép cặp</string>
     <string name="pairing_key_hint">Mã khóa bảo mật (Passphrase/Key)</string>
     <string name="pairing_desc">Cả 2 máy phải nhập cùng một mã khóa bí mật để mã hóa giải mã tin nhắn (AES-256-GCM).</string>
     <string name="device_id_label">Device ID:</string>
