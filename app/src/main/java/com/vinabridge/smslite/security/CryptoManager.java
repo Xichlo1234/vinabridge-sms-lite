@@ -44,15 +44,65 @@ public class CryptoManager {
 
     /**
      * Derives a 256-bit AES SecretKey from a user passphrase and a given salt.
+     * Compatible with Android API 21 through 34+.
      */
     public SecretKey deriveKey(String passphrase, byte[] salt) throws Exception {
         if (passphrase == null || passphrase.trim().isEmpty()) {
             throw new IllegalArgumentException("Passphrase cannot be empty");
         }
-        KeySpec spec = new PBEKeySpec(passphrase.toCharArray(), salt, PBKDF2_ITERATIONS, KEY_LENGTH_BITS);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(KDF_ALGO);
-        byte[] keyBytes = factory.generateSecret(spec).getEncoded();
-        return new SecretKeySpec(keyBytes, "AES");
+        try {
+            KeySpec spec = new PBEKeySpec(passphrase.toCharArray(), salt, PBKDF2_ITERATIONS, KEY_LENGTH_BITS);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(KDF_ALGO);
+            byte[] keyBytes = factory.generateSecret(spec).getEncoded();
+            return new SecretKeySpec(keyBytes, "AES");
+        } catch (NoSuchAlgorithmException e) {
+            // Android API 21-25 compatibility: Mac.getInstance("HmacSHA256") is supported from API 1.
+            byte[] keyBytes = pbkdf2HmacSha256(passphrase.getBytes(StandardCharsets.UTF_8), salt, PBKDF2_ITERATIONS, KEY_LENGTH_BITS / 8);
+            return new SecretKeySpec(keyBytes, "AES");
+        }
+    }
+
+    /**
+     * RFC 2898 PBKDF2 with HMAC-SHA256 fallback for older Android platforms.
+     */
+    public static byte[] pbkdf2HmacSha256(byte[] password, byte[] salt, int iterations, int dkLen) throws Exception {
+        javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+        mac.init(new SecretKeySpec(password, "HmacSHA256"));
+
+        int hLen = 32; // SHA-256 output length in bytes
+        int l = (int) Math.ceil((double) dkLen / hLen);
+        int r = dkLen - (l - 1) * hLen;
+
+        byte[] dk = new byte[dkLen];
+        int dkOffset = 0;
+
+        for (int i = 1; i <= l; i++) {
+            // U_1 = PRF(P, S || INT_32_BE(i))
+            mac.reset();
+            mac.update(salt);
+            mac.update((byte) (i >> 24));
+            mac.update((byte) (i >> 16));
+            mac.update((byte) (i >> 8));
+            mac.update((byte) i);
+            byte[] u = mac.doFinal();
+
+            byte[] t = u.clone();
+
+            // U_2 ... U_c
+            for (int c = 1; c < iterations; c++) {
+                mac.reset();
+                u = mac.doFinal(u);
+                for (int k = 0; k < hLen; k++) {
+                    t[k] ^= u[k];
+                }
+            }
+
+            int lengthToCopy = (i == l) ? r : hLen;
+            System.arraycopy(t, 0, dk, dkOffset, lengthToCopy);
+            dkOffset += lengthToCopy;
+        }
+
+        return dk;
     }
 
     /**

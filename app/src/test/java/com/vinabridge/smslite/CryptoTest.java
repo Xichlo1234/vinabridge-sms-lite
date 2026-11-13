@@ -56,4 +56,18 @@ public class CryptoTest {
 
         cryptoManager.decrypt(tampered, PASSPHRASE);
     }
+
+    @Test
+    public void testPbkdf2FallbackExactMatch() throws Exception {
+        byte[] salt = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        byte[] standardKey = cryptoManager.deriveKey(PASSPHRASE, salt).getEncoded();
+        byte[] fallbackKey = CryptoManager.pbkdf2HmacSha256(
+                PASSPHRASE.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                salt,
+                10000,
+                32
+        );
+
+        Assert.assertArrayEquals("Fallback PBKDF2 must match standard JRE PBKDF2 byte-for-byte", standardKey, fallbackKey);
+    }
 }
