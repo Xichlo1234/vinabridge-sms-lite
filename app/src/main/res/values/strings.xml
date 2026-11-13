@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">VinaBridge SMS Lite</string>
+
+    <!-- General -->
+    <string name="title_gateway">Máy gửi SMS (Gateway)</string>
+    <string name="title_receiver">Máy nhận SMS (Receiver)</string>
+    <string name="status_connected">Đã kết nối</string>
+    <string name="status_disconnected">Mất kết nối</string>
+    <string name="status_idle">Sẵn sàng</string>
+    <string name="status_syncing">Đang đồng bộ...</string>
+    <string name="last_sync_never">Chưa đồng bộ</string>
+    <string name="last_sync_prefix">Đồng bộ gần nhất: %s</string>
+
+    <!-- Gateway -->
+    <string name="gateway_switch_label">Bật chuyển tiếp SMS</string>
+    <string name="gateway_btn_test_sms">Gửi tin nhắn thử nghiệm</string>
+    <string name="gateway_queue_status">Hàng đợi chưa gửi: %d tin</string>
+    <string name="gateway_info">Điện thoại đặt tại Việt Nam, lắp SIM VinaPhone để tự động chuyển tiếp SMS qua Firebase.</string>
+
+    <!-- Receiver -->
+    <string name="receiver_btn_manual_sync">Đồng bộ thủ công</string>
+    <string name="receiver_empty_list">Chưa có tin nhắn nào được đồng bộ.</string>
+    <string name="receiver_copy_success">Đã sao chép nội dung tin nhắn!</string>
+    <string name="receiver_foreground_notif_title">VinaBridge SMS Đang lắng nghe</string>
+    <string name="receiver_foreground_notif_desc">Đang duy trì kết nối đồng bộ SMS theo thời gian thực.</string>
+    <string name="receiver_new_sms_notif_title">Tin nhắn SMS mới</string>
+    <string name="receiver_new_sms_notif_hidden">Có tin nhắn SMS mới từ %s (Đã che nội dung)</string>
+
+    <!-- Auth & Setup -->
+    <string name="firebase_config_title">Cấu hình Firebase</string>
+    <string name="firebase_db_url">Firebase Realtime DB URL</string>
+    <string name="firebase_api_key">Firebase Web API Key</string>
+    <string name="firebase_email">Email đăng nhập</string>
+    <string name="firebase_password">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_logout">Đăng xuất</string>
+    <string name="btn_save_config">Lưu cấu hình</string>
+
+    <!-- Pairing & Security -->
+    <string name="security_pairing_title">Bảo mật & Ghép cặp</string>
+    <string name="pairing_key_hint">Mã khóa bảo mật (Passphrase/Key)</string>
+    <string name="pairing_desc">Cả 2 máy phải nhập cùng một mã khóa bí mật để mã hóa giải mã tin nhắn (AES-256-GCM).</string>
+    <string name="device_id_label">Device ID:</string>
+
+    <!-- Permissions -->
+    <string name="perm_sms_rationale">Ứng dụng cần quyền nhận SMS để chuyển tiếp tin nhắn khi có SMS mới đến.</string>
+    <string name="perm_notif_rationale">Ứng dụng cần quyền thông báo để hiển thị SMS mới nhận được.</string>
+</resources>

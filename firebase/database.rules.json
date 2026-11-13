@@ -1,0 +1,46 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        // Chỉ người dùng được xác thực có auth.uid khớp với $uid mới có quyền đọc/ghi
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "sms": {
+          "$messageId": {
+            // Ràng buộc cấu trúc dữ liệu tin nhắn
+            ".validate": "newData.hasChildren(['id', 'encryptedPayload', 'timestamp', 'deviceId', 'version'])",
+            "id": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "encryptedPayload": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "deviceId": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "version": {
+              ".validate": "newData.isNumber() && newData.val() >= 1"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "devices": {
+          "$deviceId": {
+            ".validate": "newData.hasChildren(['role', 'lastSeen'])",
+            "role": {
+              ".validate": "newData.val() === 'gateway' || newData.val() === 'receiver'"
+            },
+            "lastSeen": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        }
+      }
+    }
+  }
+}
