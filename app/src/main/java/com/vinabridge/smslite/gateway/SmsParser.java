@@ -96,4 +96,9 @@ public class SmsParser {
     public static void clearCache() {
         PROCESSED_CACHE.clear();
     }
+
+    /** Release a reservation when persisting the message failed. */
+    public static synchronized void forgetMessage(String messageId) {
+        PROCESSED_CACHE.remove(messageId);
+    }
 }

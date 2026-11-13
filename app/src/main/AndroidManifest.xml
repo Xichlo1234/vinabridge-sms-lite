@@ -77,6 +77,11 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".gateway.GatewaySyncService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
+
         <!-- Receiver Foreground Service for Live Firebase Realtime Stream -->
         <service
             android:name=".receiver.ReceiverForegroundService"
